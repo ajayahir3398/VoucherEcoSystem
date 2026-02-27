@@ -1,0 +1,50 @@
+services:
+  # API Service (NestJS)
+  - type: web
+    name: digital-voucher-api
+    env: node
+    plan: free
+    buildCommand: npm install && npx nx build api
+    startCommand: node dist/apps/api/main.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      # Database connection (User to provide existing values in Render Dashboard)
+      - key: DB_HOST
+        sync: false
+      - key: DB_PORT
+        value: 5432
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: DB_DATABASE
+        sync: false
+      - key: DB_SSL
+        value: "true"
+      - key: DB_SYNCHRONIZE
+        value: "false"
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRATION
+        value: "36000000"
+
+  # Web Service (Angular)
+  - type: static
+    name: digital-voucher-web
+    env: static
+    plan: free
+    buildCommand: ./render-build.sh
+    staticPublishPath: dist/apps/web/browser
+    envVars:
+      - key: API_URL
+        fromService:
+          type: web
+          name: digital-voucher-api
+          property: host
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
