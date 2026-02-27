@@ -27,6 +27,6 @@ echo "--- Building API ---"
 npx nx build api
 
 echo "--- Building Web ---"
-npx nx build web
+npx nx build web --skip-nx-cache
 
 echo "--- Build complete ---"
