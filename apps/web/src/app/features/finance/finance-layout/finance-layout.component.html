@@ -1,0 +1,43 @@
+<div class="admin-container">
+    <aside class="sidebar" [class.open]="isMobileMenuOpen()">
+        <div class="sidebar-header">
+            <h2>Finance <span>Workspace</span></h2>
+            <button class="mobile-close-btn" (click)="toggleMobileMenu()" aria-label="Close menu">✕</button>
+        </div>
+
+        <nav class="sidebar-nav">
+            <ul>
+                @for (link of navLinks(); track link.path) {
+                <li>
+                    <a [routerLink]="link.path" routerLinkActive="active" (click)="closeMobileMenu()">
+                        <span class="icon">{{ link.icon }}</span>
+                        {{ link.label }}
+                    </a>
+                </li>
+                }
+            </ul>
+        </nav>
+
+        <div class="sidebar-footer">
+            <button class="logout-btn" (click)="logout()">
+                <span class="icon">🚪</span> Logout
+            </button>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="mobile-header">
+            <button class="menu-toggle" (click)="toggleMobileMenu()" aria-label="Toggle menu">☰</button>
+            <h2>Finance</h2>
+        </header>
+
+        <div class="content-area">
+            <router-outlet></router-outlet>
+        </div>
+    </main>
+
+    <!-- Overlay for mobile view -->
+    @if (isMobileMenuOpen()) {
+    <div class="sidebar-overlay" (click)="closeMobileMenu()"></div>
+    }
+</div>

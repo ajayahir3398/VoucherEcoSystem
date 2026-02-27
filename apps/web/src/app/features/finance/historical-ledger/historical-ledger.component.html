@@ -1,0 +1,124 @@
+<div class="ledger-dashboard">
+    <div class="header-section">
+        <div>
+            <h1>Historical Ledger</h1>
+            <p class="subtitle">Global, immutable record of all ecosystem transactions.</p>
+        </div>
+    </div>
+
+    <!-- Filters Section -->
+    <div class="apple-card filters-card">
+        <div class="filters-grid">
+            <div class="input-group">
+                <label>Transaction Type</label>
+                <select class="apple-select" [ngModel]="filterType()" (ngModelChange)="filterType.set($event)">
+                    <option value="">All Types</option>
+                    <option value="ISSUANCE">Issuance</option>
+                    <option value="REDEMPTION">Redemption</option>
+                    <option value="TRANSFER_DEBIT">Transfer (Debit)</option>
+                    <option value="TRANSFER_CREDIT">Transfer (Credit)</option>
+                    <option value="REFUND">Refund</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Start Date</label>
+                <input type="date" class="apple-input" [ngModel]="filterStartDate()"
+                    (ngModelChange)="filterStartDate.set($event)">
+            </div>
+            <div class="input-group">
+                <label>End Date</label>
+                <input type="date" class="apple-input" [ngModel]="filterEndDate()"
+                    (ngModelChange)="filterEndDate.set($event)">
+            </div>
+            <div class="filter-actions">
+                <button class="apple-btn-secondary" (click)="clearFilters()">Clear</button>
+                <button class="apple-btn" (click)="applyFilters()">Apply Filters</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Data Table Section -->
+    <div class="apple-card table-card">
+        @if (isLoading()) {
+        <div class="loading-state">
+            <div class="spinner"></div>
+            <p>Loading ledger entries...</p>
+        </div>
+        }
+
+        @if (!isLoading()) {
+        <div class="table-responsive">
+            <table class="apple-table">
+                <thead>
+                    <tr>
+                        <th>Timestamp</th>
+                        <th>Type</th>
+                        <th>Employee</th>
+                        <th>Seller / Counterparty</th>
+                        <th>Quantity</th>
+                        <th class="text-right">Amount (₹)</th>
+                        <th>Ref Nonce</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (ledgerEntries().length === 0) {
+                    <tr>
+                        <td colspan="7" class="empty-state">No ledger entries found for the selected filters.</td>
+                    </tr>
+                    }
+                    @for (entry of ledgerEntries(); track entry.id) {
+                    <tr>
+                        <td class="time-cell">{{ entry.createdAt | date:'MMM d, y, h:mm a' }}</td>
+                        <td><span class="badge" [ngClass]="getTypeBadgeClass(entry.type)">{{ entry.type | titlecase
+                                }}</span></td>
+                        <td>
+                            <div class="user-block">
+                                <span class="name">{{ entry.employeeName || 'Unknown Employee' }}</span>
+                                <span class="id" title="{{ entry.employeeId }}">{{ entry.employeeId.substring(0,8)
+                                    }}...</span>
+                            </div>
+                        </td>
+                        <td>
+                            @if (entry.sellerId) {
+                            <div class="user-block">
+                                <span class="name">{{ entry.sellerName || 'Unknown Counterparty' }}</span>
+                                <span class="id" title="{{ entry.sellerId }}">{{ entry.sellerId.substring(0,8)
+                                    }}...</span>
+                            </div>
+                            } @else {
+                            <span class="text-muted">-</span>
+                            }
+                        </td>
+                        <td>{{ entry.quantity }}</td>
+                        <td class="text-right amount-cell" [class.negative]="entry.amount < 0"
+                            [class.positive]="entry.amount > 0">
+                            {{ entry.amount > 0 ? '+' : '' }}{{ entry.amount }}
+                        </td>
+                        <td>
+                            @if (entry.refNonce) {
+                            <span class="nonce" title="{{ entry.refNonce }}">{{ entry.refNonce.substring(0, 8) }}</span>
+                            } @else {
+                            <span class="text-muted">-</span>
+                            }
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination-controls">
+            <span class="pagination-info">Showing {{ ((currentPage() - 1) * pageSize()) + (ledgerEntries().length > 0 ?
+                1 : 0) }} to {{ ((currentPage() - 1) * pageSize()) + ledgerEntries().length }} of {{ totalEntries() }}
+                entries</span>
+            <div class="page-buttons">
+                <button class="pagination-btn" [disabled]="currentPage() === 1" (click)="prevPage()">Previous</button>
+                <span class="current-page">Page {{ currentPage() }}</span>
+                <button class="pagination-btn" [disabled]="currentPage() * pageSize() >= totalEntries()"
+                    (click)="nextPage()">Next</button>
+            </div>
+        </div>
+        }
+    </div>
+</div>

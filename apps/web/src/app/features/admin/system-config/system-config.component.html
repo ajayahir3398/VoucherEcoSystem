@@ -1,0 +1,32 @@
+<div class="config-container">
+    <div class="header">
+        <h1 class="title">System Configuration</h1>
+        <p class="subtitle">Manage global application parameters</p>
+    </div>
+
+    <div class="config-list">
+        @for (config of configs(); track config.key) {
+        <div class="config-card glass-panel">
+            <div class="config-info">
+                <h3>{{ config.key }}</h3>
+                <p>{{ config.description }}</p>
+            </div>
+
+            <div class="config-control">
+                @if (config.value === 'true' || config.value === 'false') {
+                <label class="apple-toggle">
+                    <input type="checkbox" [checked]="config.value === 'true'"
+                        (change)="toggleBooleanConfig(config, cb.checked)" #cb>
+                    <span class="slider"></span>
+                </label>
+                } @else {
+                <div class="input-group">
+                    <input type="text" class="apple-input" [(ngModel)]="config.value">
+                    <button class="apple-btn-secondary" (click)="saveConfig(config)">Save</button>
+                </div>
+                }
+            </div>
+        </div>
+        }
+    </div>
+</div>

@@ -1,0 +1,119 @@
+<div class="header-actions">
+    <div class="text-content">
+        <h1 class="title">User Management</h1>
+        <p class="subtitle">View and manage system users and vendors</p>
+    </div>
+    <button class="apple-btn-primary" (click)="openAddModal()">
+        <span>+ Add User</span>
+    </button>
+</div>
+
+<div class="glass-panel table-container">
+    <div class="table-responsive">
+        <table class="apple-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>User ID</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (user of users(); track user.email) {
+                <tr>
+                    <td class="user-name">
+                        <div class="avatar">{{ user.name.charAt(0) }}</div>
+                        {{ user.name }}
+                    </td>
+                    <td class="user-email">{{ user.email }}</td>
+                    <td class="user-id">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span
+                                style="font-family: monospace; font-size: 0.85em; color: var(--apple-text-secondary);">
+                                {{ (user.id || '').substring(0, 8) }}...
+                            </span>
+                            <button class="action-btn" title="Copy System ID for Bulk Upload" (click)="copyId(user.id!)"
+                                style="padding: 2px 6px; font-size: 14px;">
+                                📋
+                            </button>
+                        </div>
+                    </td>
+                    <td><span class="role-badge" [ngClass]="user.role.toLowerCase()">{{ user.role }}</span></td>
+                    <td>
+                        <span class="status-indicator" [class.active]="user.isActive"></span>
+                        {{ user.isActive ? 'Active' : 'Inactive' }}
+                    </td>
+                    <td>
+                        <button class="action-btn edit" (click)="openEditModal(user)">Edit</button>
+                    </td>
+                </tr>
+                } @empty {
+                <tr>
+                    <td colspan="5" class="empty-state">No users found.</td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="pagination">
+        <button class="apple-btn-secondary" [disabled]="page() === 1" (click)="loadUsers(page() - 1)">Previous</button>
+        <span class="page-info">Page {{ page() }}</span>
+        <button class="apple-btn-secondary" (click)="loadUsers(page() + 1)">Next</button>
+    </div>
+</div>
+
+<!-- Modal -->
+@if (isModalOpen()) {
+<div class="modal-overlay" (click)="closeAddModal()">
+    <div class="modal-content glass-panel" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h2>{{ currentUser().id ? 'Edit User' : 'Add New User' }}</h2>
+            <button class="close-btn" (click)="closeAddModal()">✕</button>
+        </div>
+        <div class="form-group">
+            <label>Name</label>
+            <input type="text" class="apple-input" placeholder="e.g. Maya Sharma" [(ngModel)]="currentUser().name">
+        </div>
+
+        @if (!currentUser().id) {
+        <div class="form-group">
+            <label>Email</label>
+            <input type="email" class="apple-input" placeholder="maya@example.com" [(ngModel)]="currentUser().email">
+        </div>
+        <div class="form-group">
+            <label>Temporary Password</label>
+            <input type="text" class="apple-input" placeholder="ChangeMe123!" [(ngModel)]="currentUser().password">
+        </div>
+        } @else {
+        <div class="form-group">
+            <label>Email (Read-only)</label>
+            <input type="email" class="apple-input" [value]="currentUser().email" disabled>
+        </div>
+        <div class="form-group" style="display: flex; align-items: center; gap: 8px;">
+            <label style="margin: 0;">Active User</label>
+            <input type="checkbox" [(ngModel)]="currentUser().isActive">
+        </div>
+        }
+
+        <div class="form-group">
+            <label>Role</label>
+            <select class="apple-input" [(ngModel)]="currentUser().role" [disabled]="!!currentUser().id">
+                <option value="EMPLOYEE">EMPLOYEE</option>
+                <option value="SELLER">SELLER</option>
+                <option value="FINANCE">FINANCE</option>
+                <option value="ADMIN">ADMIN</option>
+            </select>
+        </div>
+        <div class="modal-actions">
+            <button class="apple-btn-secondary" (click)="closeAddModal()" [disabled]="isSaving()">Cancel</button>
+            <button class="apple-btn-primary" (click)="saveUser()" [disabled]="isSaving()">
+                {{ isSaving() ? 'Saving...' : 'Save User' }}
+            </button>
+        </div>
+    </div>
+</div>
+}

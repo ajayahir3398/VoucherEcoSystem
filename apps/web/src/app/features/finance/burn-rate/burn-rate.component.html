@@ -1,0 +1,91 @@
+<div class="burn-rate-dashboard">
+    <div class="header-section">
+        <div>
+            <h1>Burn Rate Analytics</h1>
+            <p class="subtitle">30-day time-series tracking ecosystem issuance against redemptions.</p>
+        </div>
+    </div>
+
+    <!-- Loading State -->
+    @if (isLoading()) {
+    <div class="apple-card loading-state">
+        <div class="spinner"></div>
+        <p>Analyzing financial trends...</p>
+    </div>
+    }
+
+    @if (!isLoading()) {
+    <div class="dashboard-grid">
+        <!-- Summary Metrics -->
+        <div class="apple-card metric-card">
+            <h3>30-Day Issuance</h3>
+            <div class="value positive">₹{{ totalIssuance() | number:'1.2-2' }}</div>
+            <div class="trend text-muted">Total value injected</div>
+        </div>
+
+        <div class="apple-card metric-card">
+            <h3>30-Day Redemptions</h3>
+            <div class="value negative">₹{{ totalRedemption() | number:'1.2-2' }}</div>
+            <div class="trend text-muted">Total value consumed</div>
+        </div>
+
+        <div class="apple-card metric-card">
+            <h3>Overall Burn Rate</h3>
+            <div class="value">{{ burnRatePercentage() | number:'1.1-1' }}%</div>
+            <div class="trend text-muted">Speed of consumption</div>
+            <div class="progress-bar-container">
+                <div class="progress-fill" [style.width.%]="burnRatePercentage() > 100 ? 100 : burnRatePercentage()">
+                </div>
+            </div>
+        </div>
+
+        <!-- Time Series Chart -->
+        <div class="apple-card chart-card full-width">
+            <div class="chart-header">
+                <h3>Issuance vs. Redemption Trend</h3>
+                <div class="legend">
+                    <span class="legend-item issuance"><span class="dot"></span> Issuance</span>
+                    <span class="legend-item redemption"><span class="dot"></span> Redemption</span>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <!-- Y-Axis markers -->
+                <div class="y-axis">
+                    <span>{{ maxAmount() | number:'1.0-0' }}</span>
+                    <span>{{ maxAmount() / 2 | number:'1.0-0' }}</span>
+                    <span>0</span>
+                </div>
+
+                @if (issuanceTrends().length > 0 || redemptionTrends().length > 0) {
+                <div class="chart-area">
+                    @for (item of issuanceTrends(); track item.date; let i = $index) {
+                    <div class="bar-group">
+                        <div class="bars">
+                            <!-- Issuance Bar -->
+                            <div class="bar issuance" [style.height]="getHeight(item.amount)"
+                                title="Issuance: {{item.amount}} on {{item.date}}"></div>
+
+                            <!-- Redemption Bar (matching index) -->
+                            @if (redemptionTrends()[i]) {
+                            <div class="bar redemption" [style.height]="getHeight(redemptionTrends()[i].amount)"
+                                title="Redemption: {{redemptionTrends()[i].amount}} on {{redemptionTrends()[i].date}}">
+                            </div>
+                            }
+                        </div>
+                        <div class="x-axis-label">{{ item.date | date:'MMM d' }}</div>
+                    </div>
+                    }
+                </div>
+                }
+
+                @if (issuanceTrends().length === 0 && redemptionTrends().length === 0) {
+                <div class="empty-state">
+                    <p>No transactions occurred in the last 30 days.</p>
+                </div>
+                }
+            </div>
+        </div>
+    </div>
+    }
+</div>

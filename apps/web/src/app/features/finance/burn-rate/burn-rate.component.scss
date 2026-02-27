@@ -1,0 +1,263 @@
+.burn-rate-dashboard {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.header-section {
+    h1 {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--apple-text-primary);
+        margin: 0 0 8px 0;
+    }
+
+    .subtitle {
+        color: var(--apple-text-secondary);
+        font-size: 0.95rem;
+        margin: 0;
+    }
+}
+
+.apple-card {
+    background: var(--apple-surface);
+    backdrop-filter: var(--apple-glass-blur);
+    -webkit-backdrop-filter: var(--apple-glass-blur);
+    border: 1px solid var(--apple-gray-5);
+    border-radius: var(--apple-radius-lg);
+    box-shadow: var(--apple-shadow-sm);
+    padding: 24px;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.full-width {
+    grid-column: 1 / -1;
+}
+
+.metric-card {
+    h3 {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--apple-text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin: 0 0 12px 0;
+    }
+
+    .value {
+        font-size: 2.2rem;
+        font-weight: 700;
+        color: var(--apple-text-primary);
+        margin-bottom: 8px;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
+
+        &.positive {
+            color: var(--apple-green);
+        }
+
+        &.negative {
+            color: var(--apple-red);
+        }
+    }
+
+    .trend {
+        font-size: 0.85rem;
+        color: var(--apple-text-secondary);
+    }
+
+    .progress-bar-container {
+        width: 100%;
+        height: 8px;
+        background: rgba(0, 0, 0, 0.05);
+        border-radius: 4px;
+        margin-top: 16px;
+        overflow: hidden;
+
+        .progress-fill {
+            height: 100%;
+            background: var(--apple-blue);
+            border-radius: 4px;
+            transition: width 1s ease-in-out;
+        }
+    }
+}
+
+.chart-card {
+    .chart-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 32px;
+
+        h3 {
+            margin: 0;
+            font-size: 1.1rem;
+            color: var(--apple-text-primary);
+        }
+
+        .legend {
+            display: flex;
+            gap: 16px;
+
+            .legend-item {
+                display: flex;
+                align-items: center;
+                font-size: 0.85rem;
+                color: var(--apple-text-secondary);
+
+                .dot {
+                    width: 10px;
+                    height: 10px;
+                    border-radius: 50%;
+                    margin-right: 6px;
+                }
+
+                &.issuance .dot {
+                    background: var(--apple-green);
+                }
+
+                &.redemption .dot {
+                    background: var(--apple-red);
+                }
+            }
+        }
+    }
+
+    .chart-container {
+        display: flex;
+        height: 250px;
+        position: relative;
+        padding-left: 50px;
+        /* Space for Y-axis */
+
+        .y-axis {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: var(--apple-text-secondary);
+            padding-right: 12px;
+            font-family: monospace;
+            text-align: right;
+            width: 50px;
+
+            &::after {
+                content: '';
+                position: absolute;
+                right: 0;
+                top: 0;
+                bottom: 0;
+                width: 1px;
+                background: var(--apple-gray-5);
+            }
+        }
+
+        .chart-area {
+            flex: 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            padding-top: 10px;
+
+            /* Horizontal grid lines simulated by background */
+            background-image: linear-gradient(to bottom, var(--apple-gray-5) 1px, transparent 1px);
+            background-size: 100% 50%;
+            /* 3 lines: top, middle, bottom */
+            background-position: 0 0;
+            background-repeat: repeat-y;
+
+            .bar-group {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                height: 100%;
+                flex: 1;
+                max-width: 40px;
+
+                .bars {
+                    flex: 1;
+                    width: 100%;
+                    display: flex;
+                    justify-content: center;
+                    align-items: flex-end;
+                    gap: 2px;
+                    position: relative;
+
+                    .bar {
+                        width: 12px;
+                        border-radius: 3px 3px 0 0;
+                        transition: height 0.5s ease-out;
+                        cursor: pointer;
+
+                        &:hover {
+                            opacity: 0.8;
+                        }
+
+                        &.issuance {
+                            background: var(--apple-green);
+                        }
+
+                        &.redemption {
+                            background: var(--apple-red);
+                        }
+                    }
+                }
+
+                .x-axis-label {
+                    margin-top: 8px;
+                    font-size: 0.7rem;
+                    color: var(--apple-text-secondary);
+                    transform: rotate(-45deg);
+                    transform-origin: top left;
+                    white-space: nowrap;
+                    margin-left: 8px;
+                    /* Offset for rotation */
+                }
+            }
+        }
+    }
+}
+
+.loading-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 0;
+    color: var(--apple-text-secondary);
+
+    .spinner {
+        width: 32px;
+        height: 32px;
+        border: 3px solid rgba(0, 122, 255, 0.2);
+        border-top-color: var(--apple-blue);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-bottom: 16px;
+    }
+}
+
+.empty-state {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    color: var(--apple-text-secondary);
+    font-style: italic;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}

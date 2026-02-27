@@ -1,0 +1,62 @@
+<div class="bulk-container">
+    <div class="header">
+        <h1 class="title">Bulk Issuance</h1>
+        <p class="subtitle">Issue digital coupons to multiple employees via CSV upload</p>
+    </div>
+
+    <div class="upload-area glass-panel" [class.dragging]="isDragging()" (dragover)="onDragOver($event)"
+        (dragleave)="onDragLeave($event)" (drop)="onDrop($event)">
+
+        @if (!selectedFile() && !isProcessing() && !results()) {
+        <div class="upload-content">
+            <div class="icon">📄</div>
+            <h3>Drag & drop CSV file here</h3>
+            <p>or</p>
+            <button class="apple-btn-secondary" (click)="fileInput.click()">Browse Files</button>
+            <input type="file" #fileInput (change)="onFileSelected($event)" accept=".csv" hidden>
+            <div class="hint">Format needed: Employee ID, Coupon Type ID, Quantity</div>
+            <button class="apple-btn-secondary" style="margin-top: 16px; font-size: 0.85rem;"
+                (click)="downloadTemplate()">Download Template</button>
+        </div>
+        }
+
+        @if (selectedFile() && !isProcessing() && !results()) {
+        <div class="file-preview">
+            <div class="icon">📊</div>
+            <h3>{{ selectedFile()?.name }}</h3>
+            <p>{{ (selectedFile()!.size / 1024).toFixed(2) }} KB</p>
+
+            <div class="actions">
+                <button class="apple-btn-secondary" (click)="removeFile()">Remove</button>
+                <button class="apple-btn-primary" (click)="processIssuance()">Start Issuance</button>
+            </div>
+        </div>
+        }
+
+        @if (isProcessing()) {
+        <div class="processing-state">
+            <div class="spinner"></div>
+            <h3>Processing Issuance...</h3>
+            <p>Please do not close this window</p>
+        </div>
+        }
+
+        @if (results()) {
+        <div class="results-state">
+            <div class="success-icon">✅</div>
+            <h3>Issuance Complete</h3>
+
+            <div class="stats-box">
+                <div class="stat"><span class="label">Targeted:</span> {{ results()?.totalTargeted }}</div>
+                <div class="stat success"><span class="label">Success:</span> {{ results()?.successCount }}</div>
+
+                @if (results()?.errorCount) {
+                <div class="stat error"><span class="label">Failed:</span> {{ results()?.errorCount }}</div>
+                }
+            </div>
+
+            <button class="apple-btn-secondary mt-4" (click)="removeFile()">Upload Another File</button>
+        </div>
+        }
+    </div>
+</div>

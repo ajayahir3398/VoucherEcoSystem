@@ -1,0 +1,115 @@
+<div class="header-actions">
+    <div class="text-content">
+        <h1 class="title">Coupon Management</h1>
+        <p class="subtitle">View and configure the digital coupons available to Employees</p>
+    </div>
+    <button class="apple-btn-primary" (click)="openAddModal()">
+        <span>+ Add Coupon</span>
+    </button>
+</div>
+
+<div class="glass-panel table-container">
+    <div class="table-responsive">
+        <table class="apple-table">
+            <thead>
+                <tr>
+                    <th>Target Name</th>
+                    <th>Coupon ID</th>
+                    <th>Description</th>
+                    <th>Amount (₹)</th>
+                    <th>CO2e (kg)</th>
+                    <th>Eco-Points</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (coupon of coupons(); track coupon.id) {
+                <tr>
+                    <td class="user-name">
+                        <div class="avatar badge">{{ coupon.name.substring(0,2) | uppercase }}</div>
+                        {{ coupon.name }}
+                    </td>
+                    <td>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span
+                                style="font-family: monospace; font-size: 0.85em; color: var(--apple-text-secondary);">
+                                {{ coupon.id?.substring(0, 8) }}...
+                            </span>
+                            <button class="action-btn" title="Copy Full ID" (click)="copyId(coupon.id!)"
+                                style="padding: 2px 6px; font-size: 14px;">
+                                📋
+                            </button>
+                        </div>
+                    </td>
+                    <td class="user-email">{{ coupon.description }}</td>
+                    <td>₹{{ coupon.amount }}</td>
+                    <td>{{ coupon.co2ePerServing }}</td>
+                    <td><span class="role-badge" [ngClass]="coupon.ecoPointsModifier > 0 ? 'finance' : 'employee'">{{
+                            coupon.ecoPointsModifier > 0 ? '+' : '' }}{{ coupon.ecoPointsModifier }}</span></td>
+                    <td>
+                        <span class="status-indicator" [class.active]="coupon.isActive"></span>
+                        {{ coupon.isActive ? 'Active' : 'Inactive' }}
+                    </td>
+                    <td>
+                        <button class="action-btn edit" (click)="openEditModal(coupon)">Edit</button>
+                        <button class="action-btn delete" (click)="deleteCoupon(coupon.id!)"
+                            style="color: #ff3b30; margin-left: 8px;">Delete</button>
+                    </td>
+                </tr>
+                } @empty {
+                <tr>
+                    <td colspan="7" class="empty-state">No coupons found.</td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal -->
+@if (isModalOpen()) {
+<div class="modal-overlay" (click)="closeAddModal()">
+    <div class="modal-content glass-panel" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h2>{{ currentCoupon().id ? 'Edit Coupon' : 'Add New Coupon' }}</h2>
+            <button class="close-btn" (click)="closeAddModal()">✕</button>
+        </div>
+        <div class="form-group">
+            <label>Target Item Name</label>
+            <input type="text" class="apple-input" placeholder="e.g. Filter Coffee" [(ngModel)]="currentCoupon().name">
+        </div>
+        <div class="form-group">
+            <label>Description</label>
+            <input type="text" class="apple-input" placeholder="Valid for small drinks"
+                [(ngModel)]="currentCoupon().description">
+        </div>
+        <div class="form-group">
+            <label>Amount (₹)</label>
+            <input type="number" step="0.01" class="apple-input" placeholder="50.00"
+                [(ngModel)]="currentCoupon().amount">
+        </div>
+        <div class="form-group">
+            <label>CO2e per Serving (kg)</label>
+            <input type="number" step="0.01" class="apple-input" placeholder="0.25"
+                [(ngModel)]="currentCoupon().co2ePerServing">
+        </div>
+        <div class="form-group">
+            <label>Eco-Points Modifier</label>
+            <input type="number" class="apple-input" placeholder="5" [(ngModel)]="currentCoupon().ecoPointsModifier">
+        </div>
+
+        <div class="form-group" style="display: flex; align-items: center; gap: 8px;">
+            <label style="margin: 0;">Active Target</label>
+            <input type="checkbox" [(ngModel)]="currentCoupon().isActive">
+        </div>
+
+        <div class="modal-actions">
+            <button class="apple-btn-secondary" (click)="closeAddModal()" [disabled]="isSaving()">Cancel</button>
+            <button class="apple-btn-primary" (click)="saveCoupon()" [disabled]="isSaving()">
+                {{ isSaving() ? 'Saving...' : 'Save Coupon' }}
+            </button>
+        </div>
+    </div>
+</div>
+}

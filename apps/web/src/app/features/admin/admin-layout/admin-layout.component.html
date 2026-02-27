@@ -1,0 +1,46 @@
+<div class="admin-container">
+
+    <!-- Mobile Header -->
+    <div class="mobile-header glass-panel">
+        <h2>🍎 Admin Panel</h2>
+        <button class="menu-toggle" (click)="toggleMobileMenu()">
+            @if (isMobileMenuOpen()) {
+            <span>✕</span>
+            } @else {
+            <span>☰</span>
+            }
+        </button>
+    </div>
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar glass-panel" [class.open]="isMobileMenuOpen()">
+        <div class="sidebar-header">
+            <h2>🍎 Admin Panel</h2>
+        </div>
+
+        <nav class="sidebar-nav">
+            @for (link of navLinks(); track link.path) {
+            <a [routerLink]="link.path" routerLinkActive="active" class="nav-item" (click)="closeMobileMenu()">
+                <span class="icon">{{ link.icon }}</span>
+                <span class="label">{{ link.label }}</span>
+            </a>
+            }
+        </nav>
+
+        <div class="sidebar-footer">
+            <button class="logout-btn" (click)="logout()">
+                <span class="icon">🚪</span> Logout
+            </button>
+        </div>
+    </aside>
+
+    <!-- Overlay for Mobile -->
+    @if (isMobileMenuOpen()) {
+    <div class="mobile-overlay" (click)="closeMobileMenu()"></div>
+    }
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <router-outlet></router-outlet>
+    </main>
+</div>

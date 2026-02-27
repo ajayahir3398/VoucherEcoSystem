@@ -1,0 +1,102 @@
+<div class="reconciliation-header">
+    <div class="title-area">
+        <h1 class="title">EOD Reconciliation</h1>
+        <p class="subtitle">Automated ledger to redemption variance reporting</p>
+    </div>
+    <div class="filter-area" style="display: flex; gap: 12px; align-items: center;">
+        <input type="date" class="apple-input date-picker" [ngModel]="selectedDate()"
+            (ngModelChange)="selectedDate.set($event); onDateChange()">
+        <button class="apple-btn-secondary" (click)="exportTaxReport()" [disabled]="isLoading()">
+            ⬇️ Export CSV
+        </button>
+    </div>
+</div>
+
+@if (isLoading()) {
+<div class="loader-container">
+    <div class="apple-spinner"></div>
+    <p>Generating EOD Report...</p>
+</div>
+} @else {
+@if (eodData(); as data) {
+<div class="metrics-grid">
+    <div class="metric-card glass-panel">
+        <div class="icon">🎟️</div>
+        <div class="info">
+            <span class="label">Total Redemptions</span>
+            <span class="value">{{ data.totalRedemptions }}</span>
+        </div>
+    </div>
+    <div class="metric-card glass-panel">
+        <div class="icon">📓</div>
+        <div class="info">
+            <span class="label">Ledger Entries</span>
+            <span class="value">{{ data.totalLedgerEntries }}</span>
+        </div>
+    </div>
+    <div class="metric-card glass-panel alert-success">
+        <div class="icon">✅</div>
+        <div class="info">
+            <span class="label">Matched</span>
+            <span class="value">{{ data.matchedTransactions }}</span>
+        </div>
+    </div>
+    <div class="metric-card glass-panel alert-danger" [class.no-exceptions]="data.exceptionItemCount === 0">
+        <div class="icon">⚠️</div>
+        <div class="info">
+            <span class="label">Exceptions</span>
+            <span class="value">{{ data.exceptionItemCount }}</span>
+        </div>
+    </div>
+</div>
+
+<div class="data-section glass-panel mt-4">
+    <div class="section-header">
+        <h3>Exception Items</h3>
+        <span class="badge" [class.success]="data.exceptionItems.length === 0"
+            [class.danger]="data.exceptionItems.length > 0">
+            {{ data.exceptionItems.length }} Found
+        </span>
+    </div>
+
+    <div class="table-responsive">
+        <table class="apple-table">
+            <thead>
+                <tr>
+                    <th>Variance Type</th>
+                    <th>Reference ID / Nonce</th>
+                    <th>Employee ID</th>
+                    <th>Amount / Qty</th>
+                    <th>Timestamp</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (item of data.exceptionItems; track item.id) {
+                <tr class="exception-row">
+                    <td>
+                        <span class="badge danger">{{ item.type.replace('_', ' ') }}</span>
+                    </td>
+                    <td><code class="nonce-code">{{ item.nonce || item.id }}</code></td>
+                    <td><strong>{{ item.employeeId || 'N/A' }}</strong></td>
+                    <td>{{ item.quantity ? item.quantity + 'x' : (item.amount | currency:'INR') }}</td>
+                    <td>{{ item.timestamp | date:'shortTime' }}</td>
+                </tr>
+                }
+                @if (data.exceptionItems.length === 0) {
+                <tr>
+                    <td colspan="5" class="empty-state">
+                        <div class="perfect-match">
+                            <span class="huge-icon">🎉</span>
+                            <p>Perfect Match</p>
+                            <span class="subtext">All redemptions successfully reconciled with ledger entries for this
+                                date.</span>
+                        </div>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+}
+}

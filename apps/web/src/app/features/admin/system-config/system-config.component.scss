@@ -1,0 +1,139 @@
+.config-container {
+    padding: 1.5rem;
+    max-width: 800px;
+
+    .header {
+        margin-bottom: 2rem;
+
+        .title {
+            font-size: 28px;
+            font-weight: 700;
+            margin: 0 0 4px 0;
+        }
+
+        .subtitle {
+            color: var(--apple-text-secondary);
+            margin: 0;
+            font-size: 15px;
+        }
+    }
+
+    .config-list {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .config-card {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px 24px;
+
+        .config-info {
+            flex: 1;
+            padding-right: 16px;
+
+            h3 {
+                margin: 0 0 4px 0;
+                font-size: 16px;
+                font-weight: 600;
+                font-family: monospace;
+                color: var(--apple-blue);
+                word-break: break-all;
+            }
+
+            p {
+                margin: 0;
+                font-size: 14px;
+                color: var(--apple-text-secondary);
+            }
+        }
+
+        .config-control {
+            min-width: 150px;
+            display: flex;
+            justify-content: flex-end;
+
+            .input-group {
+                display: flex;
+                gap: 8px;
+
+                .apple-input {
+                    width: 80px;
+                    text-align: center;
+                }
+            }
+        }
+    }
+}
+
+/* Apple Toggle Switch */
+.apple-toggle {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 30px;
+
+    input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+
+        &:checked+.slider {
+            background-color: var(--apple-green);
+        }
+
+        &:checked+.slider:before {
+            transform: translateX(20px);
+        }
+    }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: var(--apple-gray-4);
+        transition: .3s;
+        border-radius: 30px;
+
+        &:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+    }
+}
+
+@media (max-width: 600px) {
+    .config-container {
+        .config-card {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 16px;
+
+            .config-control {
+                width: 100%;
+                justify-content: flex-start;
+
+                .input-group {
+                    width: 100%;
+
+                    .apple-input {
+                        flex: 1;
+                    }
+                }
+            }
+        }
+    }
+}

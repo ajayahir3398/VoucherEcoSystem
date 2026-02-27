@@ -1,0 +1,182 @@
+.audit-container {
+    padding: 1.5rem;
+    max-width: 900px;
+
+    .header {
+        margin-bottom: 2rem;
+
+        .title {
+            font-size: 28px;
+            font-weight: 700;
+            margin: 0 0 4px 0;
+        }
+
+        .subtitle {
+            color: var(--apple-text-secondary);
+            margin: 0;
+            font-size: 15px;
+        }
+    }
+
+    .timeline {
+        padding: 32px;
+
+        .timeline-item {
+            display: flex;
+            margin-bottom: 32px;
+            position: relative;
+
+            &:last-child {
+                margin-bottom: 0;
+
+                &::after {
+                    display: none;
+                }
+            }
+
+            &::after {
+                content: '';
+                position: absolute;
+                top: 40px;
+                bottom: -32px;
+                left: 19px;
+                width: 2px;
+                background: var(--apple-gray-5);
+            }
+        }
+
+        .timeline-icon {
+            margin-right: 20px;
+            z-index: 2;
+
+            .icon-circle {
+                width: 40px;
+                height: 40px;
+                background: var(--apple-surface-solid);
+                border: 2px solid var(--apple-gray-5);
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 18px;
+            }
+        }
+
+        .timeline-content {
+            flex: 1;
+            background: var(--apple-surface-solid);
+            padding: 16px;
+            border-radius: var(--apple-radius-md);
+            border: 1px solid var(--apple-gray-5);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+
+            .log-header {
+                display: flex;
+                align-items: center;
+                margin-bottom: 8px;
+                flex-wrap: wrap;
+                gap: 8px;
+
+                .admin-name {
+                    font-weight: 600;
+                    color: var(--apple-text-primary);
+                }
+
+                .action-badge {
+                    background: rgba(0, 122, 255, 0.1);
+                    color: var(--apple-blue);
+                    padding: 4px 8px;
+                    border-radius: 6px;
+                    font-size: 12px;
+                    font-weight: 600;
+                    letter-spacing: 0.5px;
+                    margin-right: auto;
+                }
+
+                .time {
+                    font-size: 13px;
+                    color: var(--apple-text-secondary);
+                    width: 100%;
+                }
+            }
+
+            .log-target {
+                font-size: 14px;
+                color: var(--apple-text-primary);
+                margin-bottom: 12px;
+                word-break: break-all;
+
+                .target-id {
+                    color: var(--apple-text-secondary);
+                    font-family: monospace;
+                    background: var(--apple-gray-6);
+                    padding: 2px 6px;
+                    border-radius: 4px;
+                }
+            }
+
+            .log-details {
+                background: var(--apple-bg);
+                border-radius: var(--apple-radius-sm);
+                padding: 12px;
+                overflow-x: auto;
+
+                pre {
+                    margin: 0;
+                    font-family: monospace;
+                    font-size: 13px;
+                    color: var(--apple-text-secondary);
+                    white-space: pre-wrap;
+                    word-break: break-all;
+                }
+            }
+        }
+    }
+
+    .empty-state {
+        text-align: center;
+        color: var(--apple-text-secondary);
+        padding: 2rem;
+    }
+}
+
+/* Base Responsive */
+@media (max-width: 600px) {
+    .audit-container {
+        padding: 1rem;
+
+        .timeline {
+            padding: 16px;
+
+            .timeline-item {
+                &::after {
+                    left: 17px;
+                }
+            }
+
+            .timeline-icon {
+                margin-right: 12px;
+
+                .icon-circle {
+                    width: 36px;
+                    height: 36px;
+                    font-size: 16px;
+                }
+            }
+
+            .timeline-content {
+                .log-header {
+                    .action-badge {
+                        margin-right: 0;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media (min-width: 600px) {
+    .audit-container .timeline .timeline-content .log-header .time {
+        width: auto;
+    }
+}

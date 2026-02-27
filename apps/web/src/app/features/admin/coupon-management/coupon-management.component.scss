@@ -1,0 +1,10 @@
+@use '../user-management/user-management.component.scss';
+
+// Specialized styling overrides for coupons
+.badge {
+    background: var(--apple-blue) !important;
+    color: white !important;
+    border-radius: 8px !important; // Slightly more boxy than user avatars
+    font-weight: 600;
+    font-size: 11px;
+}

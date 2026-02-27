@@ -1,0 +1,40 @@
+<div class="audit-container">
+    <div class="header">
+        <h1 class="title">Audit Logs</h1>
+        <p class="subtitle">System-wide administrative action trail</p>
+    </div>
+
+    <div class="timeline glass-panel">
+        @for (log of logs(); track log.id) {
+        <div class="timeline-item">
+            <div class="timeline-icon">
+                <div class="icon-circle">{{ getActionIcon(log.action) }}</div>
+            </div>
+            <div class="timeline-content">
+                <div class="log-header">
+                    <span class="admin-name">{{ log.admin?.name || 'Unknown Admin' }}</span>
+                    <span class="action-badge">{{ log.action }}</span>
+                    <span class="time">{{ log.createdAt | date:'short' }}</span>
+                </div>
+
+                <div class="log-target">
+                    Target: <strong>{{ log.entity }}</strong>
+                    @if (log.entityId) {
+                    <span class="target-id">({{ log.entityId }})</span>
+                    }
+                </div>
+
+                @if (log.details) {
+                <div class="log-details">
+                    <pre>{{ formatDetails(log.details) }}</pre>
+                </div>
+                }
+            </div>
+        </div>
+        } @empty {
+        <div class="empty-state">
+            <p>No audit logs recorded.</p>
+        </div>
+        }
+    </div>
+</div>

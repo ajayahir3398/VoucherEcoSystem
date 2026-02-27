@@ -1,0 +1,100 @@
+<div class="anomaly-header">
+    <h1 class="title">Anomaly Detection</h1>
+    <p class="subtitle">System security and operational irregularities</p>
+</div>
+
+@if (isLoading()) {
+<div class="loader-container">
+    <div class="apple-spinner"></div>
+    <p>Scanning for anomalies...</p>
+</div>
+} @else {
+@if (anomalyData(); as data) {
+<div class="metrics-grid">
+    <div class="metric-card glass-panel alert-warning">
+        <div class="icon">⚠️</div>
+        <div class="info">
+            <span class="label">Failed Nonce Attempts</span>
+            <span class="value">{{ data.failedNonceAttempts }}</span>
+            <span class="subtext">Last 24 hours</span>
+        </div>
+    </div>
+
+    <div class="metric-card glass-panel alert-danger">
+        <div class="icon">🔄</div>
+        <div class="info">
+            <span class="label">Pending Sync Conflicts</span>
+            <span class="value">{{ data.syncConflicts.length }}</span>
+            <span class="subtext">Requires manual resolution</span>
+        </div>
+    </div>
+</div>
+
+<div class="data-section glass-panel">
+    <h3>Transaction Spikes</h3>
+    <p class="section-desc">Users exceeding 3 standard deviations of their mean redemption rate.</p>
+
+    <div class="table-responsive">
+        <table class="apple-table">
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Employee ID</th>
+                    <th>Count</th>
+                    <th>Mean</th>
+                    <th>StdDev</th>
+                    <th>Threshold</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (anomaly of data.anomalies; track anomaly.employeeId) {
+                <tr class="anomaly-row">
+                    <td><span class="badge danger">{{ anomaly.type }}</span></td>
+                    <td><strong>{{ anomaly.employeeId }}</strong></td>
+                    <td class="text-danger"><strong>{{ anomaly.count }}</strong></td>
+                    <td>{{ anomaly.mean }}</td>
+                    <td>{{ anomaly.stddev }}</td>
+                    <td>{{ anomaly.threshold }}</td>
+                    <td><span class="status-indicator">Investigate</span></td>
+                </tr>
+                }
+                @if (data.anomalies.length === 0) {
+                <tr>
+                    <td colspan="7" class="empty-state">No transaction spikes detected in the last 30 days.</td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@if (data.syncConflicts.length > 0) {
+<div class="data-section glass-panel mt-4">
+    <h3>Sync Conflicts Detail</h3>
+    <div class="table-responsive">
+        <table class="apple-table">
+            <thead>
+                <tr>
+                    <th>Entity Type</th>
+                    <th>Status</th>
+                    <th>Created At</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (conflict of data.syncConflicts; track conflict.id) {
+                <tr>
+                    <td>{{ conflict.entityType }}</td>
+                    <td>{{ conflict.status }}</td>
+                    <td>{{ conflict.createdAt | date:'short' }}</td>
+                    <td><button class="apple-btn-secondary">Resolve</button></td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+}
+}
+}

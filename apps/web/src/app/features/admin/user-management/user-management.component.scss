@@ -1,0 +1,221 @@
+.header-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 24px;
+
+    .text-content {
+        flex: 1;
+        margin-right: 16px;
+    }
+
+    .title {
+        font-size: 28px;
+        font-weight: 700;
+        margin: 0 0 4px 0;
+    }
+
+    .subtitle {
+        color: var(--apple-text-secondary);
+        margin: 0;
+        font-size: 15px;
+    }
+}
+
+.table-container {
+    padding: 0;
+    overflow: hidden;
+
+    .table-responsive {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .apple-table {
+        min-width: 600px;
+
+        .user-name {
+            display: flex;
+            align-items: center;
+            font-weight: 500;
+            white-space: nowrap;
+
+            .avatar {
+                width: 32px;
+                height: 32px;
+                min-width: 32px;
+                border-radius: 50%;
+                background: var(--apple-blue);
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: 600;
+                font-size: 14px;
+                margin-right: 12px;
+            }
+        }
+
+        .user-email {
+            color: var(--apple-text-secondary);
+            white-space: nowrap;
+        }
+
+        .role-badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+
+            &.employee {
+                background: rgba(0, 122, 255, 0.1);
+                color: var(--apple-blue);
+            }
+
+            &.seller {
+                background: rgba(52, 199, 89, 0.1);
+                color: var(--apple-green);
+            }
+
+            &.admin {
+                background: rgba(255, 59, 48, 0.1);
+                color: var(--apple-red);
+            }
+
+            &.finance {
+                background: rgba(255, 149, 0, 0.1);
+                color: #FF9500;
+            }
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--apple-gray-3);
+            margin-right: 6px;
+
+            &.active {
+                background: var(--apple-green);
+            }
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            color: var(--apple-blue);
+            font-weight: 500;
+            cursor: pointer;
+            padding: 6px 12px;
+            border-radius: 12px;
+            white-space: nowrap;
+
+            &:hover {
+                background: var(--apple-gray-6);
+            }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 32px;
+            color: var(--apple-text-secondary);
+        }
+    }
+
+    .pagination {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 16px;
+        border-top: 1px solid var(--apple-gray-6);
+
+        .page-info {
+            font-size: 14px;
+            color: var(--apple-text-secondary);
+            font-weight: 500;
+        }
+    }
+}
+
+/* Modal Styling */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    padding: 16px;
+}
+
+.modal-content {
+    width: 100%;
+    max-width: 400px;
+    padding: 24px;
+    background: var(--apple-surface-solid);
+    max-height: 90vh;
+    overflow-y: auto;
+
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+
+        h2 {
+            margin: 0;
+            font-size: 20px;
+        }
+
+        .close-btn {
+            background: transparent;
+            border: none;
+            font-size: 20px;
+            color: var(--apple-text-secondary);
+            cursor: pointer;
+            padding: 4px;
+        }
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--apple-text-secondary);
+        }
+    }
+
+    .modal-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+        margin-top: 32px;
+    }
+}
+
+/* Base Responsive */
+@media (max-width: 768px) {
+    .header-actions {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+
+        .apple-btn-primary {
+            width: 100%;
+        }
+    }
+}

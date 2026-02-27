@@ -1,0 +1,99 @@
+<div class="dashboard-header">
+    <h1 class="title">Overview</h1>
+    <p class="subtitle">System operational metrics</p>
+</div>
+
+@if (isLoading()) {
+<div class="loader-container">
+    <div class="apple-spinner"></div>
+    <p>Loading analytics...</p>
+</div>
+} @else {
+<div class="stats-grid">
+    @for (stat of metrics(); track stat.label) {
+    <div class="stat-card glass-panel">
+        <div class="icon-wrap" [style.background-color]="stat.bgColor">
+            <span>{{ stat.icon }}</span>
+        </div>
+        <div class="stat-info">
+            <span class="stat-label">{{ stat.label }}</span>
+            <span class="stat-value">{{ stat.value }}</span>
+        </div>
+    </div>
+    }
+</div>
+
+<div class="charts-section">
+    <!-- Strategic Data -->
+    @if (strategicData(); as st) {
+    <div class="chart-card glass-panel strategic-card">
+        <h3>Program ROI & Adoption</h3>
+        <div class="strategic-stats">
+            <div class="p-stat" style="gap: 4px;">
+                <span class="v" style="color: var(--apple-green)">{{ st.adoptionRate }}%</span>
+                <span class="l">Adoption Rate</span>
+            </div>
+            <div class="p-stat" style="gap: 4px;">
+                <span class="v" style="color: var(--apple-orange)">{{ st.burnRate }}%</span>
+                <span class="l">Burn Rate</span>
+            </div>
+            <div class="p-stat" style="gap: 4px;">
+                <span class="v">{{ st.totalIssuance }}</span>
+                <span class="l">Total Issuance</span>
+            </div>
+            <div class="p-stat" style="gap: 4px;">
+                <span class="v">{{ st.totalRedemption }}</span>
+                <span class="l">Redemptions</span>
+            </div>
+        </div>
+    </div>
+    }
+
+    <!-- Beverage Trends Chart -->
+    @if (analyticalData(); as an) {
+    <div class="chart-card glass-panel">
+        <h3>Beverage Trends</h3>
+        <p class="subtitle" style="color: var(--apple-text-secondary); font-size: 13px; margin: -15px 0 15px 0;">30-Day
+            Sum per Coupon Type</p>
+        <div class="css-chart-container">
+            @for (item of an.beverageTrends; track item.couponTypeId + item.day) {
+            <div class="bar-wrap">
+                <!-- Using +item.total to coerce string to number -->
+                <div class="bar" [style.height.%]="((+item.total) / maxBeverageCount()) * 100">
+                    <span class="tooltip">{{ item.total }}</span>
+                </div>
+                <span class="label">{{ (item.couponTypeId || 'Unknown').length > 5 ? (item.couponTypeId ||
+                    'Unknown').substring(0, 5) :
+                    (item.couponTypeId || 'Unknown') }}..</span>
+            </div>
+            }
+            @if (an.beverageTrends.length === 0) {
+            <div style="height: 100%; display: flex; align-items: center; color: var(--apple-gray-4);">Not enough data
+            </div>
+            }
+        </div>
+    </div>
+    }
+
+    <!-- Operational Data / Recent Activity -->
+    @if (operationalData(); as op) {
+    <div class="chart-card glass-panel">
+        <h3>Live Transactions</h3>
+        <ul class="activity-list">
+            @for (txn of op.liveTransactions.slice(0, 5); track txn.id) {
+            <li>
+                <div class="icon">🎟️</div>
+                <div class="info">
+                    <strong>{{ txn.quantity }}x Coupon</strong> redeemed
+                    <div class="time">{{ txn.createdAt | date:'MMM d, h:mm a' }}</div>
+                </div>
+            </li>
+            }
+            @if (op.liveTransactions.length === 0) {
+            <li style="color: var(--apple-text-secondary);">No recent redemptions</li>
+            }
+        </ul>
+    </div>
+    }
+</div>
+}
