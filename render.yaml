@@ -32,10 +32,8 @@ services:
         value: "36000000"
 
   # Web Service (Angular)
-  - type: web
+  - type: static
     name: digital-voucher-web
-    env: static
-    plan: free
     buildCommand: ./render-build.sh
     staticPublishPath: dist/apps/web/browser
     envVars:
