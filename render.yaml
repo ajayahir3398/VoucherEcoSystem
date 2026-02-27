@@ -32,7 +32,7 @@ services:
         value: "36000000"
 
   # Web Service (Angular)
-  - type: static
+  - type: web
     name: digital-voucher-web
     env: static
     plan: free
