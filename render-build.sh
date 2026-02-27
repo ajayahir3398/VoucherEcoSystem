@@ -3,7 +3,7 @@
 set -o errexit
 
 echo "--- Installing dependencies ---"
-npm install
+npm install --include=dev
 
 echo "--- Injecting API URL into environment.ts ---"
 # Create the environment file if it doesn't exist or overwrite it

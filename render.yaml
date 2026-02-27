@@ -4,7 +4,7 @@ services:
     name: digital-voucher-api
     env: node
     plan: free
-    buildCommand: npm install && npx nx build api
+    buildCommand: npm install --include=dev && npx nx build api
     startCommand: node dist/apps/api/main.js
     envVars:
       - key: NODE_ENV
